@@ -34,14 +34,18 @@ def calculateVehicleToCustomerMapping(
     v: list[Vehicle], c: list[Customer]
 ) -> list[dict[Vehicle, Customer]]:
     matchings: dict[Vehicle, Customer] = dict()
-    customers = c.copy()
+    # convert list of customers to dict
+    customers = {customer.id: customer for customer in c}
     vehicles = v.copy()
-    for customer in customers:
+    for keys, customer in customers.items():
         fastestVehicle = None
         leastTime = float("inf")
         is_available = True
         for vehicle in vehicles:
-            if vehicle.isAvailable:
+            if vehicle.isAvailable or vehicle.customerId not in [
+                id for id in customers.keys()
+            ]:  # it may happen that the customer was dropped off already (i.e. customer.awaitingService = false),
+                # but vehicle.customerId is still set
                 t = (
                     distance(
                         vehicle.coordX, vehicle.coordY, customer.coordX, customer.coordY
@@ -49,6 +53,7 @@ def calculateVehicleToCustomerMapping(
                     / 40
                 )
                 if t < leastTime:
+                    logging.info(f"Vehicle {vehicle.id} is available")
                     fastestVehicle = vehicle
                     leastTime = t
                     is_available = True
@@ -70,11 +75,14 @@ def calculateVehicleToCustomerMapping(
                     leastTime = t
                     is_available = False
 
-        if is_available:
-            matchings[vehicle] = fastestVehicle
+        if is_available and fastestVehicle is not None:
+            logging.info("Assigning %s to %s", fastestVehicle.json(), customer.json())
+            matchings[fastestVehicle] = customer
             fastestVehicle.assign(customer)
 
-        vehicles.remove(vehicle)
+        if fastestVehicle is not None:
+            vehicles.remove(fastestVehicle)
+    return matchings
 
 
 def allocateFreeVehicles(scenario: Scenario):
@@ -87,8 +95,7 @@ def allocateFreeVehicles(scenario: Scenario):
     vehicleToCustomerMap = calculateVehicleToCustomerMapping(
         scenario.vehicles, remainingCustomers
     )
-    logging.info("[Vehicle to Customer Map] %s", vehicleToCustomerMap)
-    if len(freeVehicles) > 0 and len(remainingCustomers) > 0:
+    if len(vehicleToCustomerMap) > 0:
         update = (
             Runner.updateScenario(
                 scenario.id,
@@ -106,7 +113,6 @@ def allocateFreeVehicles(scenario: Scenario):
 def eventLoop(scenario_id: str):
     while True:
         scenario = Runner.getScenario(scenario_id)
-        logging.info("[EVENT LOOP] %s", scenario.json())
         num_customers_awaiting = numberCustomersAwaitingService(scenario)
 
         if num_customers_awaiting == 0:
