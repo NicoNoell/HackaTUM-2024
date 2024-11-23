@@ -1,4 +1,4 @@
-from backend.TelcAPI import Backend, Runner
+from TelcAPI import Backend, Runner
 from flask import Flask, jsonify
 from flask_cors import CORS
 import json

@@ -1,5 +1,5 @@
-from backend.Wrapper.Vehicle import Vehicle
-from backend.Wrapper.Customer import Customer
+from Wrapper.Vehicle import Vehicle
+from Wrapper.Customer import Customer
 import json
 
 

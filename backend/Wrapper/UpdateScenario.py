@@ -1,4 +1,4 @@
-from backend.Wrapper.VehicleUpdate import VehicleUpdate
+from Wrapper.VehicleUpdate import VehicleUpdate
 import json
 
 
