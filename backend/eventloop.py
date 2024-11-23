@@ -11,10 +11,10 @@ import logging
 import json
 
 logging.basicConfig(
-    filename='event_loop.log',  # Log file name
+    filename="event_loop.log",  # Log file name
     level=logging.INFO,  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
-    format='%(asctime)s - %(levelname)s - %(message)s',  # Log format
-    datefmt='%Y-%m-%d %H:%M:%S'  # Timestamp format
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    datefmt="%Y-%m-%d %H:%M:%S",  # Timestamp format
 )
 
 
@@ -40,33 +40,35 @@ def calculateVehicleToCustomerMapping(
         closestCustomer = None
         closestDistance = float("inf")
         for customer in customers:
-            d = distance(v.x, v.y, customer.x, customer.y)
+            d = distance(v.coordX, v.coordY, customer.coordX, customer.coordY)
             if d < closestDistance:
                 closestCustomer = customer
                 closestDistance = d
-            customers.remove(closestCustomer)
         matchings[v] = closestCustomer
         v.assign(closestCustomer)
+        customers.remove(closestCustomer)
     return matchings
 
 
 def allocateFreeVehicles(scenario: Scenario):
     # filter for the customers who are awaiting service
-    remainingCustomers = [
-        scenario.customers
-        for customer in scenario.customers
-        if customer.awaitingService
+    remainingCustomers: list[Customer] = [
+        customer for customer in scenario.customers if customer.awaitingService
     ]
+    print("[Remaining Customers]", remainingCustomers[0].json())
     vehicleToCustomerMap = calculateVehicleToCustomerMapping(
         scenario.vehicles, remainingCustomers
     )
-    Runner.updateScenario(
-        scenario.id,
-        UpdateScenario(
-            vehicleUpdates=[
-                VehicleUpdate(vehicle.id, customer.id)
-                for vehicle, customer in vehicleToCustomerMap.items()
-            ]
+    print(
+        "[Assigning...]",
+        Runner.updateScenario(
+            scenario.id,
+            UpdateScenario(
+                vehicleUpdates=[
+                    VehicleUpdate(vehicle.id, customer.id)
+                    for vehicle, customer in vehicleToCustomerMap.items()
+                ]
+            ),
         ),
     )
 
@@ -74,7 +76,7 @@ def allocateFreeVehicles(scenario: Scenario):
 def eventLoop(scenario_id: str):
     while True:
         scenario = Runner.getScenario(scenario_id)
-        print("[EVENT LOOP]", scenario.json())
+        # print("[EVENT LOOP]", scenario.json())
         num_customers_awaiting = numberCustomersAwaitingService(scenario)
 
         if num_customers_awaiting == 0:
@@ -83,7 +85,7 @@ def eventLoop(scenario_id: str):
 
         logging.info(f"Number of customers awaiting service: {num_customers_awaiting}")
 
-        # TODO: update logic
+        allocateFreeVehicles(scenario)
         time.sleep(1)
 
 

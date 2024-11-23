@@ -41,9 +41,9 @@ class Runner:
         except:
             print("Response ist None oder ungültig")
 
-    def updateScenario(scenarioId: str, payload: UpdateScenario) -> None:
+    def updateScenario(scenarioId: str, payload: UpdateScenario):
         try:
-            requests.put(
+            return requests.put(
                 f"http://localhost:8090/Scenarios/update_scenario/{scenarioId}",
                 json=payload.json(),
                 headers=PAYLOAD_HEADER,
