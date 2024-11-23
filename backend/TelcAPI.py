@@ -53,10 +53,10 @@ class Runner:
         except:
             print("Response ist None oder ungültig")
 
-    def launchScenario(scenarioId):
+    def launchScenario(scenarioId, speed):
         try:
             return requests.post(
-                f"http://localhost:8090/Runner/launch_scenario/{scenarioId}"
+                f"http://localhost:8090/Runner/launch_scenario/{scenarioId}?speed={speed}"
             ).json()
         except:
             print("Response ist None oder ungültig")

@@ -65,18 +65,19 @@ def allocateFreeVehicles(scenario: Scenario):
         freeVehicles, remainingCustomers
     )
     logging.info("[Vehicle to Customer Map] %s", vehicleToCustomerMap)
-    logging.info(
-        "[Assigning...] %s",
-        Runner.updateScenario(
-            scenario.id,
-            UpdateScenario(
-                vehicleUpdates=[
-                    VehicleUpdate(vehicle.id, customer.id)
-                    for vehicle, customer in vehicleToCustomerMap.items()
-                ]
+    if len(freeVehicles) > 0 and len(remainingCustomers) > 0:
+        update = (
+            Runner.updateScenario(
+                scenario.id,
+                UpdateScenario(
+                    vehicleUpdates=[
+                        VehicleUpdate(vehicle.id, customer.id)
+                        for vehicle, customer in vehicleToCustomerMap.items()
+                    ]
+                ),
             ),
-        ),
-    )
+        )
+        logging.info("[Assigning...] %s", update)
 
 
 def eventLoop(scenario_id: str):
@@ -95,12 +96,13 @@ def eventLoop(scenario_id: str):
         time.sleep(1)
 
 
+scenarioId = "5bdf552d-6476-4e6d-83b6-b1a86a3e2df4"
 logging.info(
     "[Initialising Scenario:] %s",
-    Runner.initScenarioById("120937bb-4779-4d57-a180-dbbba5c08b7f"),
+    Runner.initScenarioById(scenarioId),
 )
 logging.info(
     "[Launching Scenario:] %s",
-    Runner.launchScenario("120937bb-4779-4d57-a180-dbbba5c08b7f"),
+    Runner.launchScenario(scenarioId, 0.005),
 )
-eventLoop("120937bb-4779-4d57-a180-dbbba5c08b7f")
+# eventLoop(scenarioId)
