@@ -3,10 +3,8 @@ import './App.css';
 import React from 'react';
 import { useState, useEffect } from 'react';
 
-function GetCarComponent(name){
-    return (
-        <h1>{name}</h1>
-    )
+function sayHi(){
+    // alert("Hi");
 }
 
 function App() {
@@ -30,9 +28,25 @@ function App() {
   return (
     <div className="App">
         <h1>Taxi-Overview</h1>
+
+        <form onSubmit={sayHi()}>
+        <label>
+          Scenario-Id: 
+          <input type="text" value=""/>
+        </label>
+        <input type="submit" value="Load Scenario" />
+      </form>
+
         {data.vehicles.map((item) => (
           <div key={item.id} class={item.isAvailable ? "vehicle available" : "vehicle occupied"} >
-            <div class="positionProperty"> <b>Position:</b> {item.coordX}, {item.coordY}</div>
+            <div class="positionProperty"><b>Position:</b> {item.coordX}, {item.coordY}</div>
+            <div><b>isAvailable:</b> {item.isAvailable}</div>
+            <div><b>vehicleSpeed:</b> {item.vehicleSpeed}</div>
+            <div><b>customerId:</b> {item.customerId}</div>
+            <div><b>remainingTravelTime:</b> {item.remainingTravelTime}</div>
+            <div><b>distanceTravelled:</b> {item.distanceTravelled}</div>
+            <div><b>activeTime:</b> {item.activeTime}</div>
+            <div><b>numberOfTrips:</b> {item.numberOfTrips}</div>
             <div class="idProperty">ID: {item.id}</div>
           </div>
         ))}
