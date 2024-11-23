@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import mapboxgl from "mapbox-gl";
+import mapboxgl, { LngLat } from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
@@ -17,6 +17,19 @@ function Map({ id }) {
       container: mapContainerRef.current,
       center: [11.576124, 48.137154],
       zoom: 10.12,
+    });
+
+    scenario["customers"].forEach(element => {
+        if (element.awaitingService){
+            new mapboxgl.Marker({"color":"#404040"}).setLngLat(new LngLat(element["coordY"], element["coordX"])).addTo(mapRef.current);
+        } 
+        else {
+            new mapboxgl.Marker({"color":"#90ee90"}).setLngLat(new LngLat(element["coordY"], element["coordX"])).addTo(mapRef.current);
+        }
+    });
+
+    scenario["vehicles"].forEach(element => {
+        new mapboxgl.Marker({"color":"#eaab54"}).setLngLat(new LngLat(element["coordY"], element["coordX"])).addTo(mapRef.current); 
     });
 
     return () => {
