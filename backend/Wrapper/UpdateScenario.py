@@ -4,12 +4,9 @@ import json
 
 class UpdateScenario:
     def __init__(self, json_data: dict) -> None:
-        self.id = str(json_data["id"]) if json_data["id"] != None else None
-        self.vehicleUpdate = (
-            VehicleUpdate(json_data["VehicleUpdate"])
-            if json_data["VehicleUpdate"] != None
-            else None
-        )
+        self.vehicles = []
+        for vehicle in json_data["vehicles"]:
+            self.vehicles.append(VehicleUpdate(vehicle))
 
     def json(self) -> dict:
-        return {"id": self.id, "vehicleUpdate": self.vehicleUpdate.json()}
+        return {"vehicles": [v.json() for v in self.vehicleUpdate.json()]}
