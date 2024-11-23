@@ -14,11 +14,11 @@ class Scenario:
         )
         self.status = str(json_data["status"]) if json_data["status"] != None else None
 
-        self.vehicles = []
+        self.vehicles: list[Vehicle] = []
         for vehicleData in json_data["vehicles"]:
             self.vehicles.append(Vehicle(vehicleData))
 
-        self.customers = []
+        self.customers: list[Customer] = []
         for customerData in json_data["customers"]:
             self.customers.append(Customer(customerData))
 
