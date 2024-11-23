@@ -31,6 +31,16 @@ class Runner:
         except:
             print("Response ist None oder ungültig")
 
+    def initScenarioById(scenarioId: str):
+        try:
+            return requests.post(
+                f"http://localhost:8090/Scenarios/initialize_scenario?db_scenario_id={scenarioId}",
+                json={},
+                headers=PAYLOAD_HEADER,
+            ).json()
+        except:
+            print("Response ist None oder ungültig")
+
     def updateScenario(scenarioId: str, payload: UpdateScenario) -> None:
         try:
             requests.put(
@@ -41,9 +51,9 @@ class Runner:
         except:
             print("Response ist None oder ungültig")
 
-    def launchScenario(scenarioId) -> None:
+    def launchScenario(scenarioId):
         try:
-            requests.post(
+            return requests.post(
                 f"http://localhost:8090/Runner/launch_scenario/{scenarioId}"
             ).json()
         except:

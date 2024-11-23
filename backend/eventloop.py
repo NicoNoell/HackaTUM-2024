@@ -64,9 +64,9 @@ def allocateFreeVehicles(scenario: Scenario):
 
 
 def eventLoop(scenario_id: str):
-
     while True:
         scenario = Runner.getScenario(scenario_id)
+        print("[EVENT LOOP]", scenario.json())
         num_customers_awaiting = numberCustomersAwaitingService(scenario)
 
         if num_customers_awaiting == 0:
@@ -77,6 +77,12 @@ def eventLoop(scenario_id: str):
         time.sleep(1)
 
 
-Runner.initScenario()
-Runner.launchScenario("120937bb-4779-4d57-a180-dbbba5c08b7f")
+print(
+    "[Initialising Scenario:]",
+    Runner.initScenarioById("120937bb-4779-4d57-a180-dbbba5c08b7f"),
+)
+print(
+    "[Launching Scenario:]",
+    Runner.launchScenario("120937bb-4779-4d57-a180-dbbba5c08b7f"),
+)
 eventLoop("120937bb-4779-4d57-a180-dbbba5c08b7f")
