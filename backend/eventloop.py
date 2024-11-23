@@ -29,6 +29,29 @@ def numberCustomersAwaitingService(scenario: Scenario):
 def distance(x1, y1, x2, y2):
     return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
 
+def calculateNaiveVehicleToCustomerMapping(
+    vehicles: list[Vehicle], c: list[Customer]
+) -> list[dict[Vehicle, Customer]]:
+    matchings: dict[Vehicle, Customer] = dict()
+    customers = c.copy()
+    for v in vehicles:
+        if len(customers) == 0:
+            return matchings
+        # find the closest customer
+        closestCustomer = None
+        closestDistance = float("inf")
+        for customer in customers:
+            d = distance(v.coordX, v.coordY, customer.coordX, customer.coordY)
+            if d < closestDistance:
+                closestCustomer = customer
+                closestDistance = d
+        matchings[v] = closestCustomer
+        v.assign(closestCustomer)
+        # logging.info("[Remaining Customers] %s", [c.id for c in customers])
+        # logging.info("[closestCustomer] %s", closestCustomer.json())
+        customers.remove(closestCustomer)
+    return matchings
+
 
 def calculateVehicleToCustomerMapping(
     v: list[Vehicle], c: list[Customer]
@@ -90,7 +113,10 @@ def allocateFreeVehicles(scenario: Scenario):
     remainingCustomers: list[Customer] = [
         customer for customer in scenario.customers if customer.awaitingService
     ]
-    # freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
+    '''    freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
+    vehicleToCustomerMap = calculateNaiveVehicleToCustomerMapping(
+        freeVehicles, remainingCustomers
+    )'''
     # logging.info("[Remaining Customers]", remainingCustomers[0].json())
     vehicleToCustomerMap = calculateVehicleToCustomerMapping(
         scenario.vehicles, remainingCustomers
@@ -111,15 +137,21 @@ def allocateFreeVehicles(scenario: Scenario):
 
 
 def eventLoop(scenario_id: str):
+    start_time = time.time()
     while True:
         scenario = Runner.getScenario(scenario_id)
+        logging.info("[EVENT LOOP] %s", scenario.json())
         num_customers_awaiting = numberCustomersAwaitingService(scenario)
 
         if num_customers_awaiting == 0:
             # all customers have been serviced
+            end_time = time.time()
             break
 
         # logging.info(f"Number of customers awaiting service: {num_customers_awaiting}")
 
         allocateFreeVehicles(scenario)
         time.sleep(1)
+    
+    logging.info(f"Scenario completed in {end_time - start_time} seconds")
+
