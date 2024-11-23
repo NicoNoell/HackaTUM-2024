@@ -5,7 +5,6 @@ import ScenarioOverview from "./components/ScenarioOverview";
 function App() {
   const [scenarioId, setScenarioId] = useState(null);
   const [scenarioLoaded, setScenarioLoaded] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const startScenario = async (sc) => {
     const res = await fetch(
@@ -30,13 +29,9 @@ function App() {
         <button
           onClick={(e) => {
             startScenario(scenarioId);
-            setIsDisabled(true);
             setScenarioLoaded(true);
           }}
-          disabled={isDisabled}
-          className={`rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-            isDisabled ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className={`rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600}`}
           >
           Start
         </button>
