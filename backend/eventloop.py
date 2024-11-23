@@ -96,7 +96,7 @@ def eventLoop(scenario_id: str):
         time.sleep(1)
 
 
-scenarioId = "5bdf552d-6476-4e6d-83b6-b1a86a3e2df4"
+scenarioId = "e97a1939-7c42-4f20-82b9-bcb0fbe21652"
 logging.info(
     "[Initialising Scenario:] %s",
     Runner.initScenarioById(scenarioId),
@@ -105,4 +105,4 @@ logging.info(
     "[Launching Scenario:] %s",
     Runner.launchScenario(scenarioId, 0.005),
 )
-# eventLoop(scenarioId)
+eventLoop(scenarioId)
