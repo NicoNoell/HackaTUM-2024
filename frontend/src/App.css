@@ -36,3 +36,36 @@
     transform: rotate(360deg);
   }
 }
+
+.vehicle {
+    width: 50%;
+    margin: 10px auto 10px auto;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.available {
+    background-color: lightgreen;
+    border-width: 2px;
+    border-color: green;
+    border-style: solid;
+}
+
+.occupied {
+    background-color: lightcoral;
+    border-width: 2px;
+    border-color: darkred;
+    border-style: solid;
+}
+
+.positionProperty {
+    margin-top: -12px;
+    text-align: left;
+}
+
+.idProperty {
+    font-size: 8pt;
+    text-align: right;
+    margin-right: -10px;
+    margin-bottom: -10px;
+}
