@@ -37,15 +37,28 @@
   }
 }
 
-.vehicle {
+/* .vehicle {
     width: 50%;
     margin: 10px auto 10px auto;
     padding: 20px;
     border-radius: 15px;
     text-align: left;
+} */
+
+table {
+    margin: 10px;
+    width: calc(100%-10px);
 }
 
-.available {
+th {
+    background-color: lightgrey;
+    border-width: 2px;
+    border-color: grey;
+    border-style: solid;
+    border-radius: 5px 5px 0px 0px;
+}
+
+ .available {
     background-color: lightgreen;
     border-width: 2px;
     border-color: green;
@@ -59,14 +72,16 @@
     border-style: solid;
 }
 
-.positionProperty {
-    margin-top: -12px;
-    text-align: left;
-}
-
-.idProperty {
+.idTabledata {
     font-size: 8pt;
-    text-align: right;
-    margin-right: -10px;
-    margin-bottom: -10px;
+} 
+
+h2 {
+    font-size: 28pt;
+    margin-top: 20px;
+    background-color: lightgrey;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(100% - 60px);
+    border-radius: 100px;
 }
