@@ -36,6 +36,8 @@ def calculateVehicleToCustomerMapping(
     matchings: dict[Vehicle, Customer] = dict()
     customers = c.copy()
     for v in vehicles:
+        if len(customers) == 0:
+            return matchings
         # find the closest customer
         closestCustomer = None
         closestDistance = float("inf")
@@ -46,6 +48,8 @@ def calculateVehicleToCustomerMapping(
                 closestDistance = d
         matchings[v] = closestCustomer
         v.assign(closestCustomer)
+        # logging.info("[Remaining Customers] %s", [c.id for c in customers])
+        # logging.info("[closestCustomer] %s", closestCustomer.json())
         customers.remove(closestCustomer)
     return matchings
 
@@ -55,12 +59,14 @@ def allocateFreeVehicles(scenario: Scenario):
     remainingCustomers: list[Customer] = [
         customer for customer in scenario.customers if customer.awaitingService
     ]
-    print("[Remaining Customers]", remainingCustomers[0].json())
+    freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
+    # logging.info("[Remaining Customers]", remainingCustomers[0].json())
     vehicleToCustomerMap = calculateVehicleToCustomerMapping(
-        scenario.vehicles, remainingCustomers
+        freeVehicles, remainingCustomers
     )
-    print(
-        "[Assigning...]",
+    logging.info("[Vehicle to Customer Map] %s", vehicleToCustomerMap)
+    logging.info(
+        "[Assigning...] %s",
         Runner.updateScenario(
             scenario.id,
             UpdateScenario(
@@ -76,25 +82,25 @@ def allocateFreeVehicles(scenario: Scenario):
 def eventLoop(scenario_id: str):
     while True:
         scenario = Runner.getScenario(scenario_id)
-        # print("[EVENT LOOP]", scenario.json())
+        logging.info("[EVENT LOOP] %s", scenario.json())
         num_customers_awaiting = numberCustomersAwaitingService(scenario)
 
         if num_customers_awaiting == 0:
             # all customers have been serviced
             break
 
-        logging.info(f"Number of customers awaiting service: {num_customers_awaiting}")
+        # logging.info(f"Number of customers awaiting service: {num_customers_awaiting}")
 
         allocateFreeVehicles(scenario)
         time.sleep(1)
 
 
-print(
-    "[Initialising Scenario:]",
-    Runner.initScenarioById("66d0a044-605a-4b12-afa9-576a6ffb74b9"),
+logging.info(
+    "[Initialising Scenario:] %s",
+    Runner.initScenarioById("120937bb-4779-4d57-a180-dbbba5c08b7f"),
 )
-print(
-    "[Launching Scenario:]",
-    Runner.launchScenario("66d0a044-605a-4b12-afa9-576a6ffb74b9"),
+logging.info(
+    "[Launching Scenario:] %s",
+    Runner.launchScenario("120937bb-4779-4d57-a180-dbbba5c08b7f"),
 )
-eventLoop("66d0a044-605a-4b12-afa9-576a6ffb74b9")
+eventLoop("120937bb-4779-4d57-a180-dbbba5c08b7f")

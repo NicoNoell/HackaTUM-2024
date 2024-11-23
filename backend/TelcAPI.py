@@ -3,6 +3,7 @@ from Wrapper.Scenario import Scenario
 from Wrapper.Customer import Customer
 from Wrapper.Vehicle import Vehicle
 from Wrapper.UpdateScenario import UpdateScenario
+import logging
 
 # NOTE: Um ein Scenario im Runner zu nutzen, muss es zuerst mit get_scenario vom Backend abgefragt bzw.
 #       anderweitig erstellt werden und dann mit Runner.init_scenario dem Runner übergeben werden.
@@ -43,6 +44,7 @@ class Runner:
 
     def updateScenario(scenarioId: str, payload: UpdateScenario):
         try:
+            logging.info(payload.json())
             return requests.put(
                 f"http://localhost:8090/Scenarios/update_scenario/{scenarioId}",
                 json=payload.json(),
