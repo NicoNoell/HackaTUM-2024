@@ -7,7 +7,15 @@ from Wrapper.Vehicle import Vehicle
 from Wrapper.Customer import Customer
 from Wrapper.UpdateScenario import UpdateScenario
 from Wrapper.VehicleUpdate import VehicleUpdate
+import logging
 import json
+
+logging.basicConfig(
+    filename='event_loop.log',  # Log file name
+    level=logging.INFO,  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    format='%(asctime)s - %(levelname)s - %(message)s',  # Log format
+    datefmt='%Y-%m-%d %H:%M:%S'  # Timestamp format
+)
 
 
 def numberCustomersAwaitingService(scenario: Scenario):
@@ -73,16 +81,18 @@ def eventLoop(scenario_id: str):
             # all customers have been serviced
             break
 
+        logging.info(f"Number of customers awaiting service: {num_customers_awaiting}")
+
         # TODO: update logic
         time.sleep(1)
 
 
 print(
     "[Initialising Scenario:]",
-    Runner.initScenarioById("120937bb-4779-4d57-a180-dbbba5c08b7f"),
+    Runner.initScenarioById("66d0a044-605a-4b12-afa9-576a6ffb74b9"),
 )
 print(
     "[Launching Scenario:]",
-    Runner.launchScenario("120937bb-4779-4d57-a180-dbbba5c08b7f"),
+    Runner.launchScenario("66d0a044-605a-4b12-afa9-576a6ffb74b9"),
 )
-eventLoop("120937bb-4779-4d57-a180-dbbba5c08b7f")
+eventLoop("66d0a044-605a-4b12-afa9-576a6ffb74b9")
