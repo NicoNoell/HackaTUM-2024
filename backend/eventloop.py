@@ -31,27 +31,50 @@ def distance(x1, y1, x2, y2):
 
 
 def calculateVehicleToCustomerMapping(
-    vehicles: list[Vehicle], c: list[Customer]
+    v: list[Vehicle], c: list[Customer]
 ) -> list[dict[Vehicle, Customer]]:
     matchings: dict[Vehicle, Customer] = dict()
     customers = c.copy()
-    for v in vehicles:
-        if len(customers) == 0:
-            return matchings
-        # find the closest customer
-        closestCustomer = None
-        closestDistance = float("inf")
-        for customer in customers:
-            d = distance(v.coordX, v.coordY, customer.coordX, customer.coordY)
-            if d < closestDistance:
-                closestCustomer = customer
-                closestDistance = d
-        matchings[v] = closestCustomer
-        v.assign(closestCustomer)
-        # logging.info("[Remaining Customers] %s", [c.id for c in customers])
-        # logging.info("[closestCustomer] %s", closestCustomer.json())
-        customers.remove(closestCustomer)
-    return matchings
+    vehicles = v.copy()
+    for customer in customers:
+        fastestVehicle = None
+        leastTime = float("inf")
+        is_available = True
+        for vehicle in vehicles:
+            if vehicle.isAvailable:
+                t = (
+                    distance(
+                        vehicle.coordX, vehicle.coordY, customer.coordX, customer.coordY
+                    )
+                    / 40
+                )
+                if t < leastTime:
+                    fastestVehicle = vehicle
+                    leastTime = t
+                    is_available = True
+            else:
+                vehicleDestinationX = customers[vehicle.customerId].destinationX
+                vehicleDestinationY = customers[vehicle.customerId].destinationY
+                t = (
+                    vehicle.remainingTravelTime
+                    + distance(
+                        customer.coordX,
+                        customer.coordY,
+                        vehicleDestinationX,
+                        vehicleDestinationY,
+                    )
+                    / vehicle.vehicleSpeed
+                )
+                if t < leastTime:
+                    fastestVehicle = vehicle
+                    leastTime = t
+                    is_available = False
+
+        if is_available:
+            matchings[vehicle] = fastestVehicle
+            fastestVehicle.assign(customer)
+
+        vehicles.remove(vehicle)
 
 
 def allocateFreeVehicles(scenario: Scenario):
@@ -59,10 +82,10 @@ def allocateFreeVehicles(scenario: Scenario):
     remainingCustomers: list[Customer] = [
         customer for customer in scenario.customers if customer.awaitingService
     ]
-    freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
+    # freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
     # logging.info("[Remaining Customers]", remainingCustomers[0].json())
     vehicleToCustomerMap = calculateVehicleToCustomerMapping(
-        freeVehicles, remainingCustomers
+        scenario.vehicles, remainingCustomers
     )
     logging.info("[Vehicle to Customer Map] %s", vehicleToCustomerMap)
     if len(freeVehicles) > 0 and len(remainingCustomers) > 0:
@@ -94,4 +117,3 @@ def eventLoop(scenario_id: str):
 
         allocateFreeVehicles(scenario)
         time.sleep(1)
-
