@@ -8,6 +8,7 @@ from Wrapper.Customer import Customer
 from Wrapper.UpdateScenario import UpdateScenario
 from Wrapper.VehicleUpdate import VehicleUpdate
 import logging
+from geopy import distance
 import json
 
 logging.basicConfig(
@@ -26,8 +27,8 @@ def numberCustomersAwaitingService(scenario: Scenario):
     return num_customers_awaiting
 
 
-def distance(x1, y1, x2, y2):
-    return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+def computeDistance(x1, y1, x2, y2):
+    return distance.distance((x1, y1), (x2, y2)).m
 
 def calculateNaiveVehicleToCustomerMapping(
     vehicles: list[Vehicle], c: list[Customer]
@@ -41,7 +42,7 @@ def calculateNaiveVehicleToCustomerMapping(
         closestCustomer = None
         closestDistance = float("inf")
         for customer in customers:
-            d = distance(v.coordX, v.coordY, customer.coordX, customer.coordY)
+            d = computeDistance(v.coordX, v.coordY, customer.coordX, customer.coordY)
             if d < closestDistance:
                 closestCustomer = customer
                 closestDistance = d
@@ -70,10 +71,10 @@ def calculateVehicleToCustomerMapping(
             ]:  # it may happen that the customer was dropped off already (i.e. customer.awaitingService = false),
                 # but vehicle.customerId is still set
                 t = (
-                    distance(
+                    computeDistance(
                         vehicle.coordX, vehicle.coordY, customer.coordX, customer.coordY
                     )
-                    / 40
+                    / 11
                 )
                 if t < leastTime:
                     logging.info(f"Vehicle {vehicle.id} is available")
@@ -85,13 +86,13 @@ def calculateVehicleToCustomerMapping(
                 vehicleDestinationY = customers[vehicle.customerId].destinationY
                 t = (
                     vehicle.remainingTravelTime
-                    + distance(
+                    + computeDistance(
                         customer.coordX,
                         customer.coordY,
                         vehicleDestinationX,
                         vehicleDestinationY,
                     )
-                    / vehicle.vehicleSpeed
+                    / (vehicle.vehicleSpeed / 3.6)
                 )
                 if t < leastTime:
                     fastestVehicle = vehicle
@@ -113,14 +114,14 @@ def allocateFreeVehicles(scenario: Scenario):
     remainingCustomers: list[Customer] = [
         customer for customer in scenario.customers if customer.awaitingService
     ]
-    '''    freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
+    freeVehicles: list[Vehicle] = [v for v in scenario.vehicles if v.isAvailable]
     vehicleToCustomerMap = calculateNaiveVehicleToCustomerMapping(
         freeVehicles, remainingCustomers
-    )'''
-    # logging.info("[Remaining Customers]", remainingCustomers[0].json())
-    vehicleToCustomerMap = calculateVehicleToCustomerMapping(
-        scenario.vehicles, remainingCustomers
     )
+    # logging.info("[Remaining Customers]", remainingCustomers[0].json())
+    # vehicleToCustomerMap = calculateVehicleToCustomerMapping(
+    #     scenario.vehicles, remainingCustomers
+    # )
     if len(vehicleToCustomerMap) > 0:
         update = (
             Runner.updateScenario(
