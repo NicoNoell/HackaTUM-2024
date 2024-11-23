@@ -2,6 +2,7 @@ import requests
 from backend.Wrapper.Scenario import Scenario
 from backend.Wrapper.Customer import Customer
 from backend.Wrapper.Vehicle import Vehicle
+from backend.Wrapper.UpdateScenario import UpdateScenario
 
 # NOTE: Um ein Scenario im Runner zu nutzen, muss es zuerst mit get_scenario vom Backend abgefragt bzw.
 #       anderweitig erstellt werden und dann mit Runner.init_scenario dem Runner übergeben werden.
@@ -30,10 +31,12 @@ class Runner:
         except:
             print("Response ist None oder ungültig")
 
-    def updateScenario(scenarioId: str) -> None:
+    def updateScenario(scenarioId: str, payload: UpdateScenario) -> None:
         try:
             requests.put(
-                f"http://localhost:8090/Scenarios/update_scenario/{scenarioId}"
+                f"http://localhost:8090/Scenarios/update_scenario/{scenarioId}",
+                json=payload.json(),
+                headers=PAYLOAD_HEADER,
             ).json()
         except:
             print("Response ist None oder ungültig")
