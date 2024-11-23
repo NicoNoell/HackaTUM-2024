@@ -47,7 +47,7 @@ function ScenarioOverview({ id }) {
               style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-                textAlign: 'left',
+                textAlign: 'center',
                 height: '100%',
               }}
             >
@@ -129,7 +129,7 @@ function ScenarioOverview({ id }) {
               style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-                textAlign: 'left',
+                textAlign: 'center',
                 height: '100%',
               }}
             >
