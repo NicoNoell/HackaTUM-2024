@@ -92,7 +92,7 @@ def calculateVehicleToCustomerMapping(
                         vehicleDestinationX,
                         vehicleDestinationY,
                     )
-                    / (vehicle.vehicleSpeed / 3.6)
+                    / vehicle.vehicleSpeed
                 )
                 if t < leastTime:
                     fastestVehicle = vehicle
