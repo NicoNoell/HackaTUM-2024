@@ -1,5 +1,6 @@
 import React from "react";
 import { useScenario } from "../utils";
+import Map from "./Map";
 
 function ScenarioOverview({ id }) {
   const { scenario, isLoading, isError } = useScenario(id);
@@ -29,9 +30,6 @@ function ScenarioOverview({ id }) {
           <th>Id</th>
         </tr>
         {scenario?.vehicles.map((item) => (
-          //   <div
-          //     key={item.id}
-          //     >
           <tr class={item.isAvailable ? "available" : "occupied"}>
             <td>
               {item.coordX}, {item.coordY}
@@ -71,7 +69,14 @@ function ScenarioOverview({ id }) {
     </div>
   );
 
-  return <div>{renderData()}</div>;
+  return (
+    <div className="flex flex-col items-center">
+      <div className="map-wrapper">
+        <Map id={id} />
+      </div>
+      {renderData()}
+    </div>
+  );
 }
 
 export default ScenarioOverview;

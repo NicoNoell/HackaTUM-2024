@@ -3,8 +3,10 @@ import mapboxgl from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
+import { useScenario } from "../utils";
 
-function Map() {
+function Map({ id }) {
+  const { scenario, isLoading, isError } = useScenario(id);
   const mapRef = useRef();
   const mapContainerRef = useRef();
 
