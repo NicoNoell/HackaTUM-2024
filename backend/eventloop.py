@@ -95,14 +95,3 @@ def eventLoop(scenario_id: str):
         allocateFreeVehicles(scenario)
         time.sleep(1)
 
-
-scenarioId = "6099a36d-0238-46cd-b711-fb91a6eab8df"
-logging.info(
-    "[Initialising Scenario:] %s",
-    Runner.initScenarioById(scenarioId),
-)
-logging.info(
-    "[Launching Scenario:] %s",
-    Runner.launchScenario(scenarioId, 0.005),
-)
-eventLoop(scenarioId)
