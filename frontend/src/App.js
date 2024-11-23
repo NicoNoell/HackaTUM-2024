@@ -11,7 +11,9 @@ function App() {
       `http://127.0.0.1:5000/api/startScenario?scenarioId=${sc}`
     );
     if (!res.ok) throw new Error("Error when starting scenario.");
-    setScenarioId(sc);
+    setTimeout(() => {
+      setScenarioId(sc);
+    }, 2000);
   };
 
   return (
@@ -31,17 +33,17 @@ function App() {
             startScenario(scenarioId);
             setScenarioLoaded(true);
           }}
-          className={`rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600}`}
-          >
+          className={`rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600}`}>
           Start
         </button>
       </div>
-
-      {scenarioLoaded ? (
-        <ScenarioOverview id={scenarioId} />
-      ) : (
-        <div>Please enter a scenario id!</div>
-      )}
+      <div className="mt-15">
+        {scenarioLoaded ? (
+          <ScenarioOverview id={scenarioId} />
+        ) : (
+          <div>Please enter a scenario id!</div>
+        )}
+      </div>
     </div>
   );
 }

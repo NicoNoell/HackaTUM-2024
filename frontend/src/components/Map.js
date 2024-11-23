@@ -21,7 +21,7 @@ function Map({ id }) {
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         center: [11.576124, 48.137154],
-        zoom: 10.12,
+        zoom: 11.2,
       });
       mapRef.current.on("load", () => {
         console.log("Map successfully loaded!");
@@ -51,7 +51,7 @@ function Map({ id }) {
     scenario.customers.forEach((customer) => {
       const color = customer.awaitingService ? "#404040" : "#90ee90";
       const marker = new mapboxgl.Marker({ color })
-        .setLngLat([customer.coordY, customer.coordX]) 
+        .setLngLat([customer.coordY, customer.coordX])
         .addTo(map);
 
       markersRef.current.push(marker);
@@ -60,7 +60,7 @@ function Map({ id }) {
     // Add vehicle markers
     scenario.vehicles.forEach((vehicle) => {
       const marker = new mapboxgl.Marker({ color: "#eaab54" })
-        .setLngLat([vehicle.coordY, vehicle.coordX]) 
+        .setLngLat([vehicle.coordY, vehicle.coordX])
         .addTo(map);
 
       markersRef.current.push(marker);

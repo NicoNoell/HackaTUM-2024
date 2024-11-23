@@ -20,12 +20,12 @@ def getData():
 def startScenario():
     scenarioId = request.args.get("scenarioId")
     Runner.initScenarioById(scenarioId)
-    Runner.launchScenario(scenarioId, 0.005)
+    Runner.launchScenario(scenarioId, 0.001)
     response = Runner.getScenario(scenarioId)
     process = Process(target=eventLoop, args=(scenarioId,))
     process.start()
-
     return jsonify(response.json())
+
 
 if __name__ == "__main__":
     app.run(debug=True)
