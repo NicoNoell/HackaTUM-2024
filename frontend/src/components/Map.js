@@ -4,6 +4,10 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
 import { useScenario } from "../utils";
 
+function interpolatePositions(x1, y1, x2, y2, t){
+    return ((x2 - x1) * t + x1, (y2 - y1) * t + y1)
+}
+
 function Map({ id }) {
   const { scenario, isLoading, isError } = useScenario(id);
   const mapRef = useRef(null);
@@ -49,12 +53,20 @@ function Map({ id }) {
 
     // Add customer markers
     scenario.customers.forEach((customer) => {
-      const color = customer.awaitingService ? "#404040" : "#90ee90";
-      const marker = new mapboxgl.Marker({ color })
-        .setLngLat([customer.coordY, customer.coordX])
-        .addTo(map);
+        if (customer.awaitingService){
+            const marker = new mapboxgl.Marker({ "color":"#404040" })
+            .setLngLat([customer.coordY, customer.coordX]) 
+            .addTo(map);
 
-      markersRef.current.push(marker);
+            markersRef.current.push(marker);
+        }
+        else {
+            const marker = new mapboxgl.Marker({ "color":"#90ee90" })
+            .setLngLat([customer.destinationY, customer.destinationX]) 
+            .addTo(map);
+            
+            markersRef.current.push(marker);
+        }
     });
 
     // Add vehicle markers
