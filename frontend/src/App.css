@@ -8,6 +8,7 @@
 }
 
 .map-wrapper {
+  padding: 20px;
   height: 40rem;
   width: 40rem;
 }
@@ -97,4 +98,20 @@ h2 {
   margin-right: auto;
   width: calc(100% - 60px);
   border-radius: 10px;
+}
+
+h1 {
+  font-size: 2.5rem;         /* Adjust size as needed */
+  font-weight: bold;         /* Makes the font bold */
+  color: #333;               /* Text color */
+  text-align: center;        /* Center-align the header */
+  margin: 20px 0;            /* Space above and below */
+  padding: 10px;             /* Internal spacing */
+  background-color: #f4f4f4; /* Background color for emphasis */
+  border: 2px solid #ddd;    /* Optional border */
+  border-radius: 10px;       /* Rounds the corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  letter-spacing: 2px;       /* Adds spacing between letters */
+  line-height: 1.5;          /* Improves readability */
+  transition: all 0.3s ease; /* Smooth hover effects */
 }

@@ -4,7 +4,7 @@ import Map from "./Map";
 
 function ScenarioOverview({ id }) {
   const { scenario, isLoading, isError } = useScenario(id);
-  if (isError) return <div>failed to load</div>;
+  if (isError) return <div>loading...</div>;
   if (isLoading) return <div>loading...</div>;
 
   const renderData = () => (
