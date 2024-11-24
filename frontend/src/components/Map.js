@@ -18,7 +18,7 @@ function Map({ id }) {
     if (!mapContainerRef.current) return;
 
     mapboxgl.accessToken =
-      "pk.eyJ1IjoiZmx4d3UiLCJhIjoiY2pucWIxenh3MDBlYzNxa3l4NThsd3AwNiJ9.xRXLfJfu0uVxtHrj7CFyOw";
+      "";
 
     // Only initialize map once
     if (!mapRef.current) {
